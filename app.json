@@ -6,6 +6,16 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamos seleccionar una foto para actualizar tu perfil.",
+          "cameraPermission": "Necesitamos usar la cámara solo para tomar tu foto de perfil.",
+          "microphonePermission": false
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },
