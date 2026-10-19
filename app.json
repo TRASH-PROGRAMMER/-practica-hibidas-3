@@ -20,6 +20,12 @@
         {
           "locationWhenInUsePermission": "Necesitamos tu ubicación solo cuando pulses Obtener ubicación."
         }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Necesitamos acceder al movimiento del dispositivo cuando actives el sensor."
+        }
       ]
     ],
     "ios": {

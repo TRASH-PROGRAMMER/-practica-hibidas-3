@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import Titulo from "../components/Titulo";
 import SensorUbicacion from "../components/sensorUbicacion";
+import SensorMovimiento from "../components/sensormovimiento";
 
 export default function PerfilScreen({ usuario, onLogout }) {
   const correo = usuario?.correo || "yo@live.uleam.edu.ec";
@@ -163,6 +164,7 @@ export default function PerfilScreen({ usuario, onLogout }) {
       </View>
 
       <SensorUbicacion />
+      <SensorMovimiento />
 
       {/* Botón Cerrar Sesión */}
       <TouchableOpacity
