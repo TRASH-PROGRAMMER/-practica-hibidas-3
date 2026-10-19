@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Titulo from "../components/Titulo";
+import SensorUbicacion from "../components/sensorUbicacion";
 
 export default function PerfilScreen({ usuario, onLogout }) {
   const correo = usuario?.correo || "yo@live.uleam.edu.ec";
@@ -160,6 +161,8 @@ export default function PerfilScreen({ usuario, onLogout }) {
           <Text style={styles.infoValor}>Cuenta activa</Text>
         </View>
       </View>
+
+      <SensorUbicacion />
 
       {/* Botón Cerrar Sesión */}
       <TouchableOpacity

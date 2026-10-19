@@ -14,6 +14,12 @@
           "cameraPermission": "Necesitamos usar la cámara solo para tomar tu foto de perfil.",
           "microphonePermission": false
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Necesitamos tu ubicación solo cuando pulses Obtener ubicación."
+        }
       ]
     ],
     "ios": {
