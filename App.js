@@ -7,6 +7,7 @@ import {
   StatusBar as RNStatusBar,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import * as Notifications from "expo-notifications";
 
 import LoginScreen from "./src/screens/LoginScreen";
 import InicioScreen from "./src/screens/InicioScreen";
@@ -16,6 +17,15 @@ import GestionScreen from "./src/screens/GestionScreen";
 import PortalClienteScreen from "./src/screens/PortalClienteScreen";
 import AnaliticaScreen from "./src/screens/AnaliticaScreen";
 import MenuInferior from "./src/components/MenuInferior";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

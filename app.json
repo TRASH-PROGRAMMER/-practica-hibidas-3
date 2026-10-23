@@ -26,7 +26,8 @@
         {
           "motionPermission": "Necesitamos acceder al movimiento del dispositivo cuando actives el sensor."
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "ios": {
       "supportsTablet": true
