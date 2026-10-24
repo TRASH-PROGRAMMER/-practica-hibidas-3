@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
+  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ export default function NotificacionLocal() {
   const [recordatorio, setRecordatorio] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [estado, setEstado] = useState("");
+  const [mostrarBotonAjustes, setMostrarBotonAjustes] = useState(false);
 
   const cargarRecordatorioProgramado = useCallback(async () => {
     try {
@@ -58,6 +60,7 @@ export default function NotificacionLocal() {
 
     setCargando(true);
     setEstado("");
+    setMostrarBotonAjustes(false);
     try {
       if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync(CANAL_ID, {
@@ -73,6 +76,7 @@ export default function NotificacionLocal() {
         permiso = (await Notifications.requestPermissionsAsync()).status;
       }
       if (permiso !== "granted") {
+        setMostrarBotonAjustes(true);
         setEstado("No hay permiso para mostrar avisos. Habilita las notificaciones en los ajustes del dispositivo e inténtalo otra vez.");
         return;
       }
@@ -99,8 +103,10 @@ export default function NotificacionLocal() {
 
       setRecordatorio({ identificador, fecha: fecha.toISOString() });
       setEstado(`Aviso programado para ${fecha.toLocaleString()}.`);
-    } catch {
-      setEstado("No se pudo programar el aviso. Comprueba los permisos e inténtalo de nuevo.");
+    } catch (error) {
+      console.error("Error al programar notificación:", error);
+      setMostrarBotonAjustes(true);
+      setEstado(`No se pudo programar el aviso: ${error?.message || String(error)}`);
     } finally {
       setCargando(false);
     }
@@ -222,6 +228,16 @@ export default function NotificacionLocal() {
           {estado}
         </Text>
       ) : null}
+
+      {mostrarBotonAjustes ? (
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={() => Linking.openSettings()}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.settingsButtonText}>⚙️ Abrir ajustes de Expo Go</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
@@ -296,4 +312,19 @@ const styles = StyleSheet.create({
   cancelButton: { alignItems: "center", paddingVertical: 12, marginTop: 4 },
   cancelButtonText: { color: "#b65335", fontSize: 12, fontWeight: "700" },
   status: { color: "#53665c", fontSize: 11, lineHeight: 16, marginTop: 10 },
+  settingsButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: "#dceee6",
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#1f6f5b",
+  },
+  settingsButtonText: {
+    color: "#1f6f5b",
+    fontSize: 12,
+    fontWeight: "700",
+  },
 });
