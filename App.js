@@ -16,6 +16,7 @@ import PerfilScreen from "./src/screens/PerfilScreen";
 import GestionScreen from "./src/screens/GestionScreen";
 import PortalClienteScreen from "./src/screens/PortalClienteScreen";
 import AnaliticaScreen from "./src/screens/AnaliticaScreen";
+import NotificacionesPush from "./src/screens/NotificacionesPush";
 import MenuInferior from "./src/components/MenuInferior";
 
 Notifications.setNotificationHandler({
@@ -51,12 +52,18 @@ export default function App() {
       if (pantallaActual === "perfil") {
         return <PerfilScreen usuario={usuario} onLogout={handleLogout} />;
       }
+      if (pantallaActual === "notificaciones" || pantallaActual === "push") {
+        return <NotificacionesPush setPantallaActual={setPantallaActual} />;
+      }
       return <PortalClienteScreen usuario={usuario} />;
     }
 
     switch (pantallaActual) {
       case "solicitudes":
-        return <SolicitudesScreen />;
+        return <SolicitudesScreen setPantallaActual={setPantallaActual} />;
+      case "notificaciones":
+      case "push":
+        return <NotificacionesPush setPantallaActual={setPantallaActual} />;
       case "productos":
       case "facturas":
       case "clientes":

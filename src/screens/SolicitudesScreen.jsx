@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import Titulo from "../components/Titulo";
 
-export default function SolicitudesScreen() {
+export default function SolicitudesScreen({ setPantallaActual }) {
   const solicitudes = [
     {
       id: "1",
@@ -69,6 +69,14 @@ export default function SolicitudesScreen() {
           <Text style={styles.textoBotonCrear}>+ Registrar solicitud de pago</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.botonPush}
+          onPress={() => setPantallaActual && setPantallaActual("notificaciones")}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textoBotonPush}>🔔 Configurar y probar Avisos Push</Text>
+        </TouchableOpacity>
+
         <Text style={styles.listaTitulo}>Actividad reciente</Text>
 
         {solicitudes.map((item) => {
@@ -108,10 +116,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   textoBotonCrear: {
     color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  botonPush: {
+    backgroundColor: "#dceee6",
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#b6d8cc",
+  },
+  textoBotonPush: {
+    color: "#1f6f5b",
     fontWeight: "bold",
     fontSize: 14,
   },

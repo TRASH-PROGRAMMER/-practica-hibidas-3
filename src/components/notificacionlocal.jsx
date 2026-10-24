@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Linking,
   Platform,
@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import * as Notifications from "expo-notifications";
+import { AndroidImportance } from "expo-notifications";
 
 const CANAL_ID = "recordatorios-locales";
 const MARCADOR = "recordatorio-local-perfil";
@@ -26,30 +27,34 @@ export default function NotificacionLocal() {
   const [estado, setEstado] = useState("");
   const [mostrarBotonAjustes, setMostrarBotonAjustes] = useState(false);
 
-  const cargarRecordatorioProgramado = useCallback(async () => {
-    try {
-      const programadas = await Notifications.getAllScheduledNotificationsAsync();
-      const existente = programadas.find(
-        (solicitud) => solicitud.content.data?.tipo === MARCADOR,
-      );
-      if (existente) {
-        setRecordatorio({
-          identificador: existente.identifier,
-          fecha: existente.content.data?.fecha || null,
-        });
-      } else {
-        setRecordatorio(null);
-      }
-    } catch {
-      setEstado("No se pudo consultar el aviso programado en este dispositivo.");
-    }
-  }, []);
-
   useEffect(() => {
     if (Platform.OS === "web") return undefined;
-    cargarRecordatorioProgramado();
-    return undefined;
-  }, [cargarRecordatorioProgramado]);
+    let activo = true;
+
+    Notifications.getAllScheduledNotificationsAsync()
+      .then((programadas) => {
+        if (!activo) return;
+        const existente = programadas.find(
+          (solicitud) => solicitud.content.data?.tipo === MARCADOR,
+        );
+        if (existente) {
+          setRecordatorio({
+            identificador: existente.identifier,
+            fecha: existente.content.data?.fecha || null,
+          });
+        } else {
+          setRecordatorio(null);
+        }
+      })
+      .catch(() => {
+        if (!activo) return;
+        setEstado("No se pudo consultar el aviso programado en este dispositivo.");
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const programarRecordatorio = async () => {
     const texto = mensaje.trim();
@@ -62,12 +67,19 @@ export default function NotificacionLocal() {
     setEstado("");
     setMostrarBotonAjustes(false);
     try {
+      let canalCreado = false;
       if (Platform.OS === "android") {
-        await Notifications.setNotificationChannelAsync(CANAL_ID, {
-          name: "Recordatorios locales",
-          importance: Notifications.AndroidImportance.DEFAULT,
-          vibrationPattern: [0, 250, 250],
-        });
+        try {
+          await Notifications.setNotificationChannelAsync(CANAL_ID, {
+            name: "Recordatorios locales",
+            importance: AndroidImportance?.DEFAULT ?? 3,
+            vibrationPattern: [0, 250, 250],
+          });
+          canalCreado = true;
+        } catch (channelError) {
+          // Expo Go en Android no soporta creación dinámica de canales
+          console.warn("Canal personalizado no disponible en Expo Go:", channelError);
+        }
       }
 
       const permisosActuales = await Notifications.getPermissionsAsync();
@@ -97,7 +109,7 @@ export default function NotificacionLocal() {
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: segundos,
-          ...(Platform.OS === "android" ? { channelId: CANAL_ID } : {}),
+          ...(canalCreado ? { channelId: CANAL_ID } : {}),
         },
       });
 

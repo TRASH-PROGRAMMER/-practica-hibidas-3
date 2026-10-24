@@ -73,6 +73,7 @@ export default function InicioScreen({ usuario, setPantallaActual }) {
             ["clientes", "♙", "Clientes"],
             ["deudas", "≡", "Deudas"],
             ["solicitudes", "↗", "Solicitudes de pago"],
+            ["notificaciones", "🔔", "Notificaciones"],
           ].map(([id, icon, label]) => (
             <TouchableOpacity key={id} style={styles.gridItem} onPress={() => setPantallaActual(id)}>
               <Text style={styles.gridIcon}>{icon}</Text>
